@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8">
+    <title>NPR - Radio</title>
+    <link rel="stylesheet" href="style.css"/>
+    <script src="angular.js"></script>
+    <script type="text/javascript" src="main.js"></script>
+</head>
+<body ng-app="npr">
+<div class="m-box" ng-controller="PlayerCtrl">
+    <div class="m-title">National Public Radio</div>
+
+    <ul id="programs_list" class="m-list" >
+        <li nprlist ng-repeat="program in programs" player="player"></li>
+    </ul>
+
+    <button ng-click="play()" ng-show="!player.playing">Play</button>
+    <button ng-click="stop()" ng-show="player.playing">Stop</button>
+    <ul>
+        <li>Playing audio:<b>{{ player.current.status }}</b></li>
+        <li>Playing current:<b>{{player.title }}</b></li>
+        <li>Playing duration:<b>{{player.current.duration | duration}}</b></li>
+        <li>Playing progress:<b>{{player.played }}</b></li>
+    </ul>
+</div>
+</body>
+</html>
