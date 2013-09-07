@@ -1,0 +1,7 @@
+<li ng-class="{'play':'play','stop':'stop','pause':'pause'}[program.status]" ng-model="program"   ng-click="player.playAction(program)">
+    <div class="m-progress" style="width:{{ program.percent }}"></div>
+    <div class="m-l-p">
+        <div class="m-l m-l-title"><div class="m-name">{{ program.title }}</div></div>
+        <div class="m-l m-l-dur">{{ program.duration|duration }}</div>
+    </div>
+</li>
