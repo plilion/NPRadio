@@ -4,25 +4,35 @@
     <meta charset="UTF-8">
     <title>NPR - Radio</title>
     <link rel="stylesheet" href="style.css"/>
-    <script src="angular.js"></script>
-    <script type="text/javascript" src="main.js"></script>
+    <!--<script src="angular.js"></script>-->
+    <!--<script type="text/javascript" src="main.js"></script>-->
 </head>
 <body ng-app="npr">
-<div class="m-box" ng-controller="PlayerCtrl">
-    <div class="m-title">National Public Radio</div>
+<div class="npr-box" ng-controller="PlayerCtrl">
+    <div class="npr-header">
+        <a class="npr-menu" href="javascropt:"></a>
+        <a class="npr-share" href="javascropt:"></a>
+        <div class="npr-title">
+            <h2>Big Big World</h2>
+        </div>
+    </div>
+    <div class="npr-list">
+        <ul>
+          <li>
+              <div class="pro-progress"></div>
+              <div class="pro-info">
+                  <div class="pro-title">
+                      <div class="pro-name">program - title program - title program - title program - title</div>
+                  </div>
+                  <div class="pro-duration">
+                      10:10
+                  </div>
+              </div>
+          </li>
 
-    <ul id="programs_list" class="m-list" >
-        <li nprlist ng-repeat="program in programs" player="player"></li>
-    </ul>
-
-    <button ng-click="play()" ng-show="!player.playing">Play</button>
-    <button ng-click="stop()" ng-show="player.playing">Stop</button>
-    <ul>
-        <li>Playing audio:<b>{{ player.current.status }}</b></li>
-        <li>Playing current:<b>{{player.title }}</b></li>
-        <li>Playing duration:<b>{{player.current.duration | duration}}</b></li>
-        <li>Playing progress:<b>{{player.played }}</b></li>
-    </ul>
+        </ul>
+    </div>
+    <div class="npr-ctrl"></div>
 </div>
 </body>
 </html>
