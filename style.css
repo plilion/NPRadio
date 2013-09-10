@@ -71,38 +71,40 @@ body{overflow:auto;}
     bottom: -5px;
     box-shadow:0px -15px #9EA3A5,15px 0px #9EA3A5;
 }
+
+
 .npr-title{
     width: 240px;
     margin: 0 auto;
     padding-top: 16px;
     text-align: center;
     color:#878c8f;
+    overflow: hidden;
+}
+.npr-title h2{
+    font-size: 18px;
+    white-space: nowrap;
 }
 
 
-
-.npr-ctrl{
-    height: 105px;
-    background: #e9ebec;
-    border-bottom-left-radius: 5px;
-    border-bottom-right-radius: 5px;
-}
 
 .npr-list{
     background: #2c3e50;
     height: 400px;
     overflow-y: hidden;
+    position: relative;
+    padding-right: 10px;
 }
 /*scrollbar*/
 .npr-list:hover{
-
+    padding-right: 0px;
     overflow-y: scroll;
 }
-.npr-list::-webkit-scrollbar{
+::-webkit-scrollbar{
     width: 10px;
 }
 
-.npr-list::-webkit-scrollbar-track{
+::-webkit-scrollbar-track{
     background: #2c3e50;
 }
 ::-webkit-scrollbar-thumb{
@@ -110,21 +112,15 @@ body{overflow:auto;}
     background: #95a5a6;
 }
 
-::-webkit-scrollbar-track-piece {
-    background-color: #2c3e50;
-}
-
 
 .npr-list li{
     background: black;
     height: 40px;
-    position: relative;
+
     color:#7e868e;
 }
 .pro-progress{
-    position: absolute;
-    top:0;
-    left: 0;
+
     width:50%;
     height: 39px;
     background: #2c3e50;
@@ -133,6 +129,7 @@ body{overflow:auto;}
 .pro-info{
     background: #2c3e50;
     height: 39px;
+    margin-top: -40px;
 }
 .pro-title{
     width: 250px;
@@ -153,5 +150,72 @@ body{overflow:auto;}
     line-height: 39px;
     text-align: center;
     position: relative;
+
+}
+.npr-ctrl{
+    height: 93px;
+    background: #e9ebec;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+    padding-top: 12px;
+}
+.player-ctrl,player-progress{
+    margin:0 12px;
+    height: 23px;
+}
+.player-loop{
+    width: 20px;
+    height: 100%;
+    background: url("player_ctrl.png") left -18px no-repeat;
+    display: block;
+    float:left;
+}
+.player-loop:active{
+    background-position: left 4px;
+}
+.player-shuffle{
+    width: 22px;
+    height: 100%;
+    background: url("player_ctrl.png") left -46px no-repeat;
+    display: block;
+    float:right;
+}
+.player-shuffle:active{
+    background-position: left -71px;
+}
+
+.player-play{
+    width: 110px;
+    margin:0 auto;
+}
+.player-btn{
+    width: 18px;
+    height: 23px;
+    background: url("player_ctrl.png") left -149px no-repeat;
+    margin:0 auto;
+    display: block;
+}
+.player-btn:active{
+    background-position: left -119px;
+}
+.player-rewind{
+    width: 25px;
+    height: 23px;
+    background: url("player_ctrl.png") left -95px no-repeat;
+    display: block;
+    float:left;
+}
+.player-forward{
+    width: 25px;
+    height: 23px;
+    background: url("player_ctrl.png") left -175px no-repeat;
+    display: block;
+    float:right;
+}
+
+.player-progress{
+    padding-top: 35px;
+}
+.player-pregressbar{
 
 }
