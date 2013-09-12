@@ -4,185 +4,31 @@
     <meta charset="UTF-8">
     <title>NPR - Radio</title>
     <link rel="stylesheet" href="style.css"/>
-    <!--<script src="angular.js"></script>-->
-    <!--<script type="text/javascript" src="main.js"></script>-->
+    <script src="angular.js"></script>
+    <script type="text/javascript" src="main.js"></script>
 </head>
 <body ng-app="npr">
-<div class="npr-box" ng-controller="PlayerCtrl">
+<div class="npr-box" ng-controller="PlayerCtrl" ng-class="{'play':'play','stop':'stop','pause':'pause'}[player.status]">
     <div class="npr-header">
-        <a class="npr-menu" href="javascropt:"></a>
-        <a class="npr-share" href="javascropt:"></a>
+        <a class="npr-menu" href="javascript:"></a>
+        <a class="npr-share" href="javascript:"></a>
         <div class="npr-title">
-            <h2>Big Big World</h2>
+            <h2 ng-init="">{{ current.title }}</h2>
         </div>
     </div>
     <div class="npr-list">
         <ul class="pro-list">
-          <li>
-              <div class="pro-progress"></div>
+          <li ng-repeat="program in programs" program-view ng-click="operate(program)" ng-model="program">
+              <div class="pro-progress" style="width:{{ program.currentTime | progress:program.duration }}"></div>
               <div class="pro-info">
                   <div class="pro-title">
-                      <div class="pro-name">program - title program - title program - title program - title</div>
+                      <div class="pro-name">{{ program.title }}</div>
                   </div>
                   <div class="pro-duration">
-                      10:10
+                      {{ program.duration | fTime }}
                   </div>
               </div>
           </li>
-            <li>
-                <div class="pro-progress"></div>
-                <div class="pro-info">
-                    <div class="pro-title">
-                        <div class="pro-name">program - title program - title program - title program - title</div>
-                    </div>
-                    <div class="pro-duration">
-                        10:10
-                    </div>
-                </div>
-            </li>
-            <li>
-                <div class="pro-progress"></div>
-                <div class="pro-info">
-                    <div class="pro-title">
-                        <div class="pro-name">program - title program - title program - title program - title</div>
-                    </div>
-                    <div class="pro-duration">
-                        10:10
-                    </div>
-                </div>
-            </li>
-            <li>
-                <div class="pro-progress"></div>
-                <div class="pro-info">
-                    <div class="pro-title">
-                        <div class="pro-name">program - title program - title program - title program - title</div>
-                    </div>
-                    <div class="pro-duration">
-                        10:10
-                    </div>
-                </div>
-            </li>
-            <li>
-                <div class="pro-progress"></div>
-                <div class="pro-info">
-                    <div class="pro-title">
-                        <div class="pro-name">program - title program - title program - title program - title</div>
-                    </div>
-                    <div class="pro-duration">
-                        10:10
-                    </div>
-                </div>
-            </li>
-            <li>
-                <div class="pro-progress"></div>
-                <div class="pro-info">
-                    <div class="pro-title">
-                        <div class="pro-name">program - title program - title program - title program - title</div>
-                    </div>
-                    <div class="pro-duration">
-                        10:10
-                    </div>
-                </div>
-            </li>
-            <li>
-                <div class="pro-progress"></div>
-                <div class="pro-info">
-                    <div class="pro-title">
-                        <div class="pro-name">program - title program - title program - title program - title</div>
-                    </div>
-                    <div class="pro-duration">
-                        10:10
-                    </div>
-                </div>
-            </li>
-            <li>
-                <div class="pro-progress"></div>
-                <div class="pro-info">
-                    <div class="pro-title">
-                        <div class="pro-name">program - title program - title program - title program - title</div>
-                    </div>
-                    <div class="pro-duration">
-                        10:10
-                    </div>
-                </div>
-            </li>
-            <li>
-                <div class="pro-progress"></div>
-                <div class="pro-info">
-                    <div class="pro-title">
-                        <div class="pro-name">program - title program - title program - title program - title</div>
-                    </div>
-                    <div class="pro-duration">
-                        10:10
-                    </div>
-                </div>
-            </li>
-            <li>
-                <div class="pro-progress"></div>
-                <div class="pro-info">
-                    <div class="pro-title">
-                        <div class="pro-name">program - title program - title program - title program - title</div>
-                    </div>
-                    <div class="pro-duration">
-                        10:10
-                    </div>
-                </div>
-            </li>
-            <li>
-                <div class="pro-progress"></div>
-                <div class="pro-info">
-                    <div class="pro-title">
-                        <div class="pro-name">program - title program - title program - title program - title</div>
-                    </div>
-                    <div class="pro-duration">
-                        10:10
-                    </div>
-                </div>
-            </li>
-            <li>
-                <div class="pro-progress"></div>
-                <div class="pro-info">
-                    <div class="pro-title">
-                        <div class="pro-name">program - title program - title program - title program - title</div>
-                    </div>
-                    <div class="pro-duration">
-                        10:10
-                    </div>
-                </div>
-            </li>
-            <li>
-                <div class="pro-progress"></div>
-                <div class="pro-info">
-                    <div class="pro-title">
-                        <div class="pro-name">program - title program - title program - title program - title</div>
-                    </div>
-                    <div class="pro-duration">
-                        10:10
-                    </div>
-                </div>
-            </li>
-            <li>
-                <div class="pro-progress"></div>
-                <div class="pro-info">
-                    <div class="pro-title">
-                        <div class="pro-name">program - title program - title program - title program - title</div>
-                    </div>
-                    <div class="pro-duration">
-                        10:10
-                    </div>
-                </div>
-            </li>
-            <li>
-                <div class="pro-progress"></div>
-                <div class="pro-info">
-                    <div class="pro-title">
-                        <div class="pro-name">program - title program - title program - title program - title</div>
-                    </div>
-                    <div class="pro-duration">
-                        10:10
-                    </div>
-                </div>
-            </li>
         </ul>
     </div>
     <div class="npr-ctrl">
@@ -192,12 +38,16 @@
             <div class="player-play">
                 <a class="player-rewind" href="javascript:"></a>
                 <a class="player-forward" href="javascript:"></a>
-                <a class="player-btn" href="javascript:"></a>
+                <a class="player-btn" ng-click="operate()" href="javascript:"></a>
             </div>
         </div>
         <div class="player-progress">
-            00:00
-            00:00
+            <span class="player-timeL" ng-init="0">{{ player.currentTime | fTime }}</span>
+            <span class="player-timeR" ng-init="0">{{ player.duration | fTime }}</span>
+            <div class="player-pregressbar">
+                 <div class="player-pregresshandle" style="width:{{ player.currentTime | progress:player.duration }}"></div>
+
+            </div>
         </div>
     </div>
 </div>

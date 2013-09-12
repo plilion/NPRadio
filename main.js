@@ -56,8 +56,8 @@ var Bind = function (target,event,callback){
                     transitionEnd = transitionEnd || whichTransitionEvent(ele);
                     ele.addEventListener(transitionEnd, loop);
                 }
-                if(!ele.classList.contains('m-wsc')){
-                    ele.classList.add('m-wsc');
+                if(!ele.classList.contains('wordscroll')){
+                    ele.classList.add('wordscroll');
                     loop.call(ele);
                 }
             },
@@ -65,7 +65,7 @@ var Bind = function (target,event,callback){
                 index = queueDom.indexOf(ele);
                 if(~index){
                     queueAni[index].direction = 1;
-                    ele.classList.remove('m-wsc');
+                    ele.classList.remove('wordscroll');
                     ele.style.cssText = '';
                 }
             }
@@ -89,89 +89,72 @@ npr.factory('nprService',['$http',function($http){
 }]);
 
 npr.factory('audio',['$document',function($document){
+
     var audio = $document[0].createElement('audio');
-    return audio;
+    return angular.element(audio);
 }]);
-
-npr.factory('player',['audio','$rootScope',function(audio,$rootScope){
-    var player = {
-        playing:false,
-        current:null,
+npr.factory('playStatus',function(){
+    return ['stop','playing','pause','loading'];
+});
+npr.factory('player',['audio','$rootScope','playStatus',function(audio,$rootScope,status){
+    /*
+    * 操作：播放 暂停 设置进度 调音
+    * 状态：当前时间 总时间 播放器状态
+    * */
+     var audioEl = audio[0];
+     var player = {
+        status:'stop',//stop pause playing loading
         ready:false,
-        title: '',
+        currentTime:0,
+        duration:0 ,
+        status:status[0],
 
-        playAction:function(program){
-
-            if(program !== player.current){
-                player.stop();
-                player.play(program);
-            }else{
-                if(player.current.status === 'play' ){
-                    player.pause();
-                }else{
-                    player.play();
-                }
-            }
-        },
-        play:function(program){
-            if(program ){
-                var url = program.audio[0].format.mp4.$text;
-                player.title = program.title;
-                audio.src = url;
-                player.current = program;
-            }
-            player.current.status = 'play';
-            player.playing = true;
-            audio.play();
+        play:function(url){
+            audioEl.src = url;
+            audioEl.play();
         },
         stop:function(){
-            if(player.current){
-                audio.pause();
-                player.ready =  false;
-                player.current.status = 'stop';
-                player.current.percent= '0%';
-                player.current = null;
-                player.playing = false;
-            }
+
+            audioEl.pause();
+            player.ready =  false;
+            player.status = status[0];
+            player.currentTime =  0;
+            player.duration = 0;
         },
         pause:function(){
-            audio.pause();
-            player.current.status = 'pause';
+            audioEl.pause();
+            player.status = status[2];
             player.playing = false;
-        },
-        crtTime:function(){
-            return audio.currentTime;
-        },
-        crtDuration:function(){
-            return audio.duration;
         }
     };
-    Bind(audio,'canplay',function(){
+    audio.bind('canplay',function(){
         $rootScope.$apply(function(){
             player.ready = true;
+            player.duration = audioEl.duration;
         });
-    });
-    Bind(audio,'timeupdate',function(event){
-       $rootScope.$apply(function(){
-           player.played = player.crtTime();
-           player.current.percent =  ((player.crtTime() / player.crtDuration())*100)+'%';
-       });
-    });
+        }).bind('play',function(){
+            $rootScope.$apply(function(){
+                player.status = status[1];
+            });
+        }).bind('pause',function(){
+            $rootScope.$apply(function(){
+                player.status = status[2];
+            });
+        }).bind('timeupdate',function(e){
+            $rootScope.$apply(function(){
 
-    Bind(audio,'ended',function(){
-        $rootScope.$apply(function(){
-            var index = $rootScope.programs.indexOf(player.current);
-            if($rootScope.programs[index+1]){
-                player.play($rootScope.programs[index+1]);
-            }else{
-                player.stop();
-            }
+               player.currentTime = audioEl.currentTime;
+            });
+        }).bind('ended',function(){
+            $rootScope.$apply(function(){
+                player.status = status[0];
+                player.currentTime = player.currentTime = 0;
+            });
         });
-    });
     return player;
 }]);
 
-npr.filter('duration',function(){
+npr.filter('fTime',function(){
     return function(d){
         d = parseInt(d,10) || 0;
         var m = parseInt(d / 60,10),s = (d %60);
@@ -180,22 +163,27 @@ npr.filter('duration',function(){
         return m+':'+s;
     }
 });
-
-npr.directive('nprlist',function(){
+npr.filter('progress',function(){
+    return function(played,duration){
+        played = parseFloat(played,10);
+        duration = parseInt(duration,10);
+        if(isNaN(duration)){
+            return '0%';
+        }
+        return ((played/duration)*100) + '%';
+    }
+});
+npr.directive('programView',function(){
     return {
         restrict:'A',
         require:['^ngModel'],
-        templateUrl:'nprList.html',
-        replace:true,
-        scope:{
-            program: '=ngModel',
-            player: '=player'
-        },
+
         link:function(scope,ele,attrs){
-            var mName = ele[0].querySelector('.m-name'),offset,isEnter = false,unWatch;
+
+            var mName = ele[0].querySelector('.pro-name'),offset,isEnter = false,unWatch;
             var aniWordAdd = function(){
                 if(offset === undefined){
-                    offset = 205 - mName.getBoundingClientRect().width;
+                    offset = 250 - mName.getBoundingClientRect().width;
                     if(offset > -1){
                         ele.unbind('mouseover').unbind('mouseout');
                         unWatch();
@@ -208,7 +196,6 @@ npr.directive('nprlist',function(){
                     if(scope.program.status === 'stop' || isEnter){
                         Awsc.remove(mName);
                     }
-
             };
 
             unWatch = scope.$watch('program.status',function(oldVal,newVal){
@@ -224,32 +211,63 @@ npr.directive('nprlist',function(){
                 e.stopPropagation();
                 aniWordAdd();
                 isEnter = true;
-            })
-                .bind('mouseout',function(e){
-                    e.stopPropagation();
-                    isEnter = false;
-                    aniWordRemove();
-                });
+            }).bind('mouseout',function(e){
+                e.stopPropagation();
+                isEnter = false;
+                aniWordRemove();
+            });
         }
     }
 });
 
-npr.controller('PlayerCtrl',['$scope','player','nprService',function($scope,player,nprService){
+npr.controller('PlayerCtrl',['$scope','player','nprService','playStatus',function($scope,player,nprService,status){
     nprService.programs(apiKey).success(function(data){
+        $scope.current = null;
         $scope.programs = [];
         angular.forEach(data.list.story,function(program){
-            program.status = 'stop'; //stop pause play
+            program.status = status[0]; //stop pause play
             program.duration = program.audio[0].duration.$text;
-            program.percent = '0%';
-            program.played = 0;
+            program.currentTime = 0;
             program.title = program.title.$text;
+            program.url = program.audio[0].format.mp4.$text;
             $scope.programs.push(program);
         });
     }).error(function(data,status){});
+
+
     $scope.player = player;
 
+
+
+
+
+
+
+
+
+    $scope.operate = function(program){
+        if($scope.current === program){
+            $scope.pause();
+            return ;
+        }
+        if($scope.player.status === status[1]){
+            $scope.pause();
+            return ;
+        }
+        if(program){
+            $scope.stop();
+            $scope.current = program;
+        }else{
+            $scope.current = $scope.programs[0];
+        }
+        $scope.play();
+    }
     $scope.play = function(){
-        $scope.player.play(player.current || $scope.programs[0]);
+
+        $scope.player.play($scope.current.url);
+    }
+    $scope.pause = function(){
+        $scope.player.pause();
     }
     $scope.stop = function(){
         $scope.player.stop();

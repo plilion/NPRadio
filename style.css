@@ -8,10 +8,13 @@ body{font:12px/1 "Hiragino Sans GB", "Microsoft YaHei", "WenQuanYi Micro Hei", s
 .clearfix{*zoom:1;}/*ie6、7*/
 html,body{width:100%; height:100%;}
 html{overflow:hidden;}
-body{overflow:auto;}
+body{overflow:auto;background: #4c5666}
 
-/*scoll bar*/
-
+/*breadthum*/
+.wordscroll{
+     -webkit-transition:left 2s ease .1s;
+    transition:left 2s ease .1s;
+}
 
 .npr-box{
     width: 320px;
@@ -19,7 +22,8 @@ body{overflow:auto;}
 }
 .npr-header{
     height: 65px;
-    background: #e9ebec;
+    background:-webkit-linear-gradient(top,#f2f2f3,#e7e8e9,#dddfe1);
+    background:-linear-gradient(top,#f2f2f3,#e7e8e9,#dddfe1);
     border-top-left-radius: 5px;
     border-top-right-radius: 5px;
     position: relative;
@@ -45,7 +49,12 @@ body{overflow:auto;}
     background: #9ea3a5;
     cursor: pointer;
 }
-
+.npr-menu:active{
+    border-color:#df6461;
+}
+.npr-menu:active:after{
+    background: #df6461;
+}
 .npr-share{
     display: block;
     width: 12px;
@@ -71,7 +80,13 @@ body{overflow:auto;}
     bottom: -5px;
     box-shadow:0px -15px #9EA3A5,15px 0px #9EA3A5;
 }
-
+.npr-share:active{
+    border-color:#df6461;
+}
+.npr-share:active:before{
+    background: #df6461;
+    box-shadow: 0px -15px #df6461,15px 0px #df6461;
+}
 
 .npr-title{
     width: 240px;
@@ -91,15 +106,12 @@ body{overflow:auto;}
 .npr-list{
     background: #2c3e50;
     height: 400px;
-    overflow-y: hidden;
+    overflow-y: scroll;
     position: relative;
-    padding-right: 10px;
+
 }
 /*scrollbar*/
-.npr-list:hover{
-    padding-right: 0px;
-    overflow-y: scroll;
-}
+
 ::-webkit-scrollbar{
     width: 10px;
 }
@@ -120,8 +132,7 @@ body{overflow:auto;}
     color:#7e868e;
 }
 .pro-progress{
-
-    width:50%;
+    width:0%;
     height: 39px;
     background: #2c3e50;
     border-bottom: 1px solid #ec5b62;
@@ -142,6 +153,7 @@ body{overflow:auto;}
 }
 .pro-name{
     white-space:nowrap;
+    position: absolute;
 }
 .pro-duration{
     float:left;
@@ -154,7 +166,8 @@ body{overflow:auto;}
 }
 .npr-ctrl{
     height: 93px;
-    background: #e9ebec;
+    background:-webkit-linear-gradient(top,#f2f3f3,#e7e9ea,#dddfe1);
+    background:-linear-gradient(top,#f2f3f3,#e7e9ea,#dddfe1);
     border-bottom-left-radius: 5px;
     border-bottom-right-radius: 5px;
     padding-top: 12px;
@@ -215,7 +228,40 @@ body{overflow:auto;}
 
 .player-progress{
     padding-top: 35px;
+    margin:0 12px;
+}
+.player-timeL{
+    float:left;
+}
+.player-timeR{
+    float:right;
 }
 .player-pregressbar{
+    width:206px;
+    height:8px;
+    margin:0 auto;
+    background: #a2a7aa;
+    border-radius: 8px;
 
+}
+.player-pregresshandle{
+    position: relative;
+    height:8px;
+    width: 0%;
+    border-top-left-radius: 8px;
+    border-bottom-left-radius: 8px;
+    background: -webkit-linear-gradient(top,#df6461,#ed6467 50%,#d73b48);
+    background: linear-gradient(top,#df6461,#ed6467 50%,#d73b48);
+}
+.player-pregresshandle:after{
+    content: '';
+    position: absolute;
+    right:-5px;
+    top:-2px;
+    width:10px;
+    height:10px;
+    border-radius: 10px;
+    background: #f9f9f9;
+    box-shadow: 1px 1px 0 #c4bfc0;
+    cursor: pointer;
 }
