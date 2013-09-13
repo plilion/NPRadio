@@ -94,61 +94,90 @@ npr.factory('audio',['$document',function($document){
     return angular.element(audio);
 }]);
 npr.factory('playStatus',function(){
-    return ['stop','playing','pause','loading'];
+    return ['stop','play','pause','loading'];
 });
 npr.factory('player',['audio','$rootScope','playStatus',function(audio,$rootScope,status){
     /*
     * 操作：播放 暂停 设置进度 调音
     * 状态：当前时间 总时间 播放器状态
     * */
-     var audioEl = audio[0];
+     var audioEl = audio[0],current = null,nullPlayInfo = {
+         status:status[0],
+         duration:0,
+         currentTime:0,
+         title:0
+     },current = nullPlayInfo;
      var player = {
         status:'stop',//stop pause playing loading
         ready:false,
         currentTime:0,
         duration:0 ,
         status:status[0],
-
-        play:function(url){
-            audioEl.src = url;
+        playInfo :nullPlayInfo,
+        play:function(program){
+            player.playInfo = program;
+            audioEl.src = program.url;
             audioEl.play();
         },
         stop:function(){
 
             audioEl.pause();
             player.ready =  false;
-            player.status = status[0];
-            player.currentTime =  0;
-            player.duration = 0;
+            current.status = status[0];
+            current.currentTime =  0;
+            current = player.playInfo = nullPlayInfo;
         },
         pause:function(){
             audioEl.pause();
             player.status = status[2];
             player.playing = false;
+        },
+        rePlay:function(){
+          audio.play();
+        },
+        readyPlay:function(program){
+            current = program;
+        },
+        programAction:function(program){
+            if(player.playInfo === program){
+                player.pause();
+            }else{
+                player.play(program);
+            }
+        },
+        playAction : function(){
+        if(current.status === status[0]){
+            player.play(current);
         }
+         if(current.status  === status[1]){
+             player.pause();
+         }
+         if(current.status  === status[2]){
+             player.rePlay();
+         }
+     }
     };
     audio.bind('canplay',function(){
         $rootScope.$apply(function(){
             player.ready = true;
-            player.duration = audioEl.duration;
         });
         }).bind('play',function(){
             $rootScope.$apply(function(){
-                player.status = status[1];
+                current.status = status[1];
             });
         }).bind('pause',function(){
             $rootScope.$apply(function(){
-                player.status = status[2];
+                current.status = status[2];
             });
         }).bind('timeupdate',function(e){
             $rootScope.$apply(function(){
 
-               player.currentTime = audioEl.currentTime;
+                current.currentTime = audioEl.currentTime;
             });
         }).bind('ended',function(){
             $rootScope.$apply(function(){
-                player.status = status[0];
-                player.currentTime = player.currentTime = 0;
+                current.status = status[0];
+                current.currentTime = 0;
             });
         });
     return player;
@@ -176,7 +205,7 @@ npr.filter('progress',function(){
 npr.directive('programView',function(){
     return {
         restrict:'A',
-        require:['^ngModel'],
+
 
         link:function(scope,ele,attrs){
 
@@ -221,55 +250,31 @@ npr.directive('programView',function(){
 });
 
 npr.controller('PlayerCtrl',['$scope','player','nprService','playStatus',function($scope,player,nprService,status){
+
+    $scope.programs = [];
     nprService.programs(apiKey).success(function(data){
-        $scope.current = null;
-        $scope.programs = [];
+        var playInfo;
         angular.forEach(data.list.story,function(program){
-            program.status = status[0]; //stop pause play
-            program.duration = program.audio[0].duration.$text;
-            program.currentTime = 0;
-            program.title = program.title.$text;
-            program.url = program.audio[0].format.mp4.$text;
-            $scope.programs.push(program);
+            playInfo = {
+                title:program.title.$text,
+                url:program.audio[0].format.mp4.$text,
+                status:status[0],
+                duration:program.audio[0].duration.$text,
+                currentTime:0
+            }
+            $scope.programs.push(playInfo);
         });
     }).error(function(data,status){});
 
 
     $scope.player = player;
+    $scope.player.readyPlay($scope.programs[0]);
 
 
 
+    $scope.programAction = function(program){
 
-
-
-
-
-
-    $scope.operate = function(program){
-        if($scope.current === program){
-            $scope.pause();
-            return ;
-        }
-        if($scope.player.status === status[1]){
-            $scope.pause();
-            return ;
-        }
-        if(program){
-            $scope.stop();
-            $scope.current = program;
-        }else{
-            $scope.current = $scope.programs[0];
-        }
-        $scope.play();
+        $scope.player.play(program);
     }
-    $scope.play = function(){
 
-        $scope.player.play($scope.current.url);
-    }
-    $scope.pause = function(){
-        $scope.player.pause();
-    }
-    $scope.stop = function(){
-        $scope.player.stop();
-    }
 }]) ;

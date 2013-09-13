@@ -8,17 +8,17 @@
     <script type="text/javascript" src="main.js"></script>
 </head>
 <body ng-app="npr">
-<div class="npr-box" ng-controller="PlayerCtrl" ng-class="{'play':'play','stop':'stop','pause':'pause'}[player.status]">
+<div class="npr-box" ng-controller="PlayerCtrl" >
     <div class="npr-header">
         <a class="npr-menu" href="javascript:"></a>
         <a class="npr-share" href="javascript:"></a>
         <div class="npr-title">
-            <h2 ng-init="">{{ current.title }}</h2>
+            <h2 ng-init="">National Public Radio</h2>
         </div>
     </div>
     <div class="npr-list">
         <ul class="pro-list">
-          <li ng-repeat="program in programs" program-view ng-click="operate(program)" ng-model="program">
+          <li ng-repeat="program in programs" program-view ng-click="programAction(program)"  ng-class="{'play':'play','stop':'stop','pause':'pause'}[program.status]">
               <div class="pro-progress" style="width:{{ program.currentTime | progress:program.duration }}"></div>
               <div class="pro-info">
                   <div class="pro-title">
@@ -33,19 +33,19 @@
     </div>
     <div class="npr-ctrl">
         <div class="player-ctrl">
-            <a class="player-loop" href="javascript:"></a>
+            <a class="player-loop" href="javascript:" ></a>
             <a class="player-shuffle" href="javascript:"></a>
             <div class="player-play">
                 <a class="player-rewind" href="javascript:"></a>
                 <a class="player-forward" href="javascript:"></a>
-                <a class="player-btn" ng-click="operate()" href="javascript:"></a>
+                <a class="player-btn" ng-class="{'play':'stop-btn'}[player.playInfo.status]" ng-click="player.playAction()" href="javascript:"></a>
             </div>
         </div>
         <div class="player-progress">
-            <span class="player-timeL" ng-init="0">{{ player.currentTime | fTime }}</span>
-            <span class="player-timeR" ng-init="0">{{ player.duration | fTime }}</span>
+            <span class="player-timeL" ng-init="0">{{ player.playInfo.currentTime | fTime }}</span>
+            <span class="player-timeR" ng-init="0">{{ player.playInfo.duration | fTime }}</span>
             <div class="player-pregressbar">
-                 <div class="player-pregresshandle" style="width:{{ player.currentTime | progress:player.duration }}"></div>
+                 <div class="player-pregresshandle" style="width:{{ player.playInfo.currentTime | progress:player.playInfo.duration }}"></div>
 
             </div>
         </div>

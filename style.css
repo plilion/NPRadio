@@ -10,7 +10,7 @@ html,body{width:100%; height:100%;}
 html{overflow:hidden;}
 body{overflow:auto;background: #4c5666}
 
-/*breadthum*/
+/*breadcrumn*/
 .wordscroll{
      -webkit-transition:left 2s ease .1s;
     transition:left 2s ease .1s;
@@ -183,9 +183,10 @@ body{overflow:auto;background: #4c5666}
     display: block;
     float:left;
 }
-.player-loop:active{
+.player-loop-on{
     background-position: left 4px;
 }
+
 .player-shuffle{
     width: 22px;
     height: 100%;
@@ -208,7 +209,7 @@ body{overflow:auto;background: #4c5666}
     margin:0 auto;
     display: block;
 }
-.player-btn:active{
+.stop-btn{
     background-position: left -119px;
 }
 .player-rewind{
@@ -264,4 +265,8 @@ body{overflow:auto;background: #4c5666}
     background: #f9f9f9;
     box-shadow: 1px 1px 0 #c4bfc0;
     cursor: pointer;
+}
+
+.npr-list .play,.npr-list .pause{
+    color:white;
 }
